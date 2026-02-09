@@ -1,10 +1,11 @@
 from agent import Agent
-from model_client.openai_client import OpenaiClient
+
 
 if __name__ == '__main__':
-    agent = Agent(OpenaiClient(
-        base_url='https://router.huggingface.co/v1',
-        api_key='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',
-        model='zai-org/GLM-4.7-Flash'
-    ))
-    agent.execute("随便做点什么")
+    # model = 'Qwen/Qwen3-Coder-Next'
+    # model = 'deepseek-ai/DeepSeek-V3.2'
+    # model = 'zai-org/GLM-4.7-Flash'
+    model = 'deepseek-ai/DeepSeek-R1'
+    agent = Agent()
+    result = agent.execute("计算(1 + 1) * (1 + 2)的值，先拆分步骤然后创建子Agent执行，其中的加法操作创建子Agent执行，不要直接计算结果")
+    print(result)

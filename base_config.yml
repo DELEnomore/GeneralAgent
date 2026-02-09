@@ -1,0 +1,5 @@
+# base_url: 'https://router.huggingface.co/v1'
+base_url: 'https://dashscope.aliyuncs.com/compatible-mode/v1'
+#model: 'zai-org/GLM-4.7-Flash'
+model: 'deepseek-v3.2'
+api_key:
