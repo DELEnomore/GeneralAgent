@@ -1,5 +1,5 @@
 from model_client.openai_client import OpenaiClient
-from tools.tool import Tool, TOOL_REGISTRY, execute_tool_call, tool
+from tool.tool import Tool, TOOL_REGISTRY, execute_tool_call, tool
 
 DEFAULT_SYSTEM_PROMPT = "You are an intelligent agent, tasked with fulfilling users' requests.Use appropriate tools reasonably, plan before execution when faced with complex tasks, and if necessary, delegate parts of the task to other agents."
 

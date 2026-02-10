@@ -1,7 +1,7 @@
 import os
 import subprocess
 from typing import Optional
-from tools.tool import tool
+from tool.tool import tool
 
 
 @tool()

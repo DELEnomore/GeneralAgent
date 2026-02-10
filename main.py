@@ -1,4 +1,4 @@
-from agent import Agent
+from agent.agent import Agent
 from logging.logger import log
 
 if __name__ == '__main__':
