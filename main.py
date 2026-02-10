@@ -1,5 +1,8 @@
 import asyncio
 from agent.agent import Agent
+from tool.common_tools import init_tools
+
+init_tools()
 
 async def main():
     # model = 'Qwen/Qwen3-Coder-Next'

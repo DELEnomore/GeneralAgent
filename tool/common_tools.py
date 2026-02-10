@@ -1,8 +1,5 @@
 import os
 import asyncio
-from random import randint
-
-from agent.agent import Agent
 from tool.tool import tool
 
 def init_tools():
@@ -116,20 +113,3 @@ async def modify_file(file_path: str, old_content: str, new_content: str):
         return f"修改文件失败: {str(e)}"
 
 
-@tool()
-async def task(prompt: str, tools: list, user_input: str) -> str:
-    """
-    Assign the task to the sub-agent for execution.
-    :param prompt: system prompt, set by the super Agent according to its task.
-    :param tools:  tools available to sub agent, filtered by super agent
-    :param user_input: the exact subtask that sub agent has to finish
-    :return:
-    """
-    id = randint(1, 10)
-    print(f'创建子agent{id}, prompt:{prompt}, tools:{tools}, input:{user_input}')
-
-    agent = Agent(system_prompt=prompt, available_tools=tools)
-    result = await agent.execute(user_input)
-    print(f'子Agent{id}执行结束，结果:{result}')
-    del agent
-    return result

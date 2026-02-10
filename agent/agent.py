@@ -1,6 +1,8 @@
 import asyncio
+from random import randint
+
 from model_client.openai_client import OpenaiClient
-from tool.tool import Tool, TOOL_REGISTRY, execute_tool_call
+from tool.tool import Tool, TOOL_REGISTRY, execute_tool_call, tool
 
 DEFAULT_SYSTEM_PROMPT = "You are an intelligent agent, tasked with fulfilling users' requests.Use appropriate tools reasonably, plan before execution when faced with complex tasks, and if necessary, delegate parts of the task to other agents."
 
@@ -49,3 +51,20 @@ class Agent:
                 } for i in range(len(message['tool_calls']))])
 
 
+@tool()
+async def task(prompt: str, tools: list, user_input: str) -> str:
+    """
+    Assign the task to the sub-agent for execution.
+    :param prompt: system prompt, set by the super Agent according to its task.
+    :param tools:  tools available to sub agent, filtered by super agent
+    :param user_input: the exact subtask that sub agent has to finish
+    :return:
+    """
+    id = randint(1, 10)
+    print(f'创建子agent{id}, prompt:{prompt}, tools:{tools}, input:{user_input}')
+
+    agent = Agent(system_prompt=prompt, available_tools=tools)
+    result = await agent.execute(user_input)
+    print(f'子Agent{id}执行结束，结果:{result}')
+    del agent
+    return result
