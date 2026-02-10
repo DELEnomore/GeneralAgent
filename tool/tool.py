@@ -2,10 +2,12 @@ import inspect
 import json
 import asyncio
 from typing import Callable, get_type_hints, Coroutine
-
 from docstring_parser import parse
+from tool.common_tools import init_tools
 
 TOOL_REGISTRY: dict[str, 'Tool'] = {}
+
+init_tools()
 
 class Tool:
     def __init__(self, name: str, description: str, parameters: dict, func: Callable):

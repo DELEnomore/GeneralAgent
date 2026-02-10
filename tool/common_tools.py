@@ -5,6 +5,8 @@ from random import randint
 from agent.agent import Agent
 from tool.tool import tool
 
+def init_tools():
+    print("Initializing tools...")
 
 @tool()
 async def calculator(a: int, b: int):
