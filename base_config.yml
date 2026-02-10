@@ -2,4 +2,4 @@
 base_url: 'https://dashscope.aliyuncs.com/compatible-mode/v1'
 #model: 'zai-org/GLM-4.7-Flash'
 model: 'deepseek-v3.2'
-api_key: 'sk-54dd376d35814724b54c2263b75a21ca'
+api_key: ''
