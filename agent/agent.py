@@ -20,8 +20,6 @@ class Agent:
             self.tools = [TOOL_REGISTRY[tool_name] for tool_name in available_tools]
         else:
             self.tools = list(TOOL_REGISTRY.values())
-        global CUR_AGENT_LEVEL
-        CUR_AGENT_LEVEL += 1
 
     async def execute(self, user_input: str) -> str:
         """
