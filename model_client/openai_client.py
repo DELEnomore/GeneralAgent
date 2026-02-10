@@ -1,6 +1,5 @@
-import os
 import yaml
-from openai import OpenAI
+from openai import AsyncOpenAI
 
 with open('base_config.yml', 'r', encoding='utf-8') as f:
     content = yaml.safe_load(f)
@@ -16,17 +15,17 @@ class OpenaiClient:
         self.model = model
         self.base_url = base_url
         self.api_key = api_key
-        self.client = OpenAI(
+        self.client = AsyncOpenAI(
             base_url=self.base_url,
             api_key=self.api_key,
         )
 
-    def create(self, messages: list, tools: list = None) -> dict:
+    async def create(self, messages: list, tools: list = None) -> dict:
         """创建聊天完成"""
         json_schema_tools = None
         if tools:
             json_schema_tools = [tool.json_schema for tool in tools]
-        response = self.client.chat.completions.create(
+        response = await self.client.chat.completions.create(
             model=self.model,
             messages=messages,
             tools=json_schema_tools

@@ -1,6 +1,7 @@
 import inspect
 import json
-from typing import Callable, get_type_hints
+import asyncio
+from typing import Callable, get_type_hints, Coroutine
 
 from docstring_parser import parse
 
@@ -18,8 +19,11 @@ class Tool:
             }
         }
 
-    def __call__(self, **kwargs):
-        return str(self.func(**kwargs))
+    async def __call__(self, **kwargs):
+        result = self.func(**kwargs)
+        if asyncio.iscoroutine(result):
+            result = await result
+        return str(result)
 
 
 def _type_to_json_schema(py_type) -> str:
@@ -85,8 +89,8 @@ def tool():
         return func
     return decorator
 
-def execute_tool_call(name, arguments):
+async def execute_tool_call(name, arguments):
     if isinstance(arguments, str):
         arguments = json.loads(arguments)
-    return TOOL_REGISTRY[name](**arguments)
+    return await TOOL_REGISTRY[name](**arguments)
 
