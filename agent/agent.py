@@ -5,7 +5,7 @@ DEFAULT_SYSTEM_PROMPT = "You are an intelligent agent, tasked with fulfilling us
 
 OPENAI_CLIENT = OpenaiClient()
 
-AGENT_NUM = 0
+CUR_AGENT_LEVEL = -1
 
 class Agent:
     """Agent类"""
@@ -17,8 +17,8 @@ class Agent:
             self.tools = [TOOL_REGISTRY[tool_name] for tool_name in available_tools]
         else:
             self.tools = TOOL_REGISTRY.values()
-        global AGENT_NUM
-        AGENT_NUM += 1
+        global CUR_AGENT_LEVEL
+        CUR_AGENT_LEVEL += 1
 
     def execute(self, user_input: str) -> str:
         """
@@ -42,8 +42,8 @@ class Agent:
                     'id': tool_call['id'],
                 } for tool_call in message['tool_calls']])
     def __del__(self):
-        global AGENT_NUM
-        AGENT_NUM -= 1
+        global CUR_AGENT_LEVEL
+        CUR_AGENT_LEVEL -= 1
 
 @tool()
 def task(prompt: str, tools: list, user_input: str) -> str:
