@@ -83,3 +83,4 @@ def _truncate_message(message):
         message = message[0:100]
     message = ''.join(message.splitlines())
     return message
+22
