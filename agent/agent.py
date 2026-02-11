@@ -31,9 +31,7 @@ class Agent:
         ]
         while True:
             message = await self.client.create(messages, self.tools)
-            content = message['content'].replace('\n', '')
-            truncated_content =  content[:50] + '...' if len(content) > 50 else content
-            print(f'{message['role']}: {truncated_content}')
+            print(f'{_truncate_message(message['content'].replace('\n', ''))}')
             messages.append(message)
             if not message.get('tool_calls'):
                 return message['content']
@@ -44,8 +42,7 @@ class Agent:
                     for tool_call in message['tool_calls']
                 ])
                 for i in range(len(message['tool_calls'])):
-                    print(f'--执行工具:{message['tool_calls'][i]['function']['name']}, 参数：{message['tool_calls'][i]['function']['arguments']}')
-                    print(f'--工具执行结果：{_truncate_message(tool_results[i])}')
+                    print(f'：{_truncate_message(tool_results[i])}')
                     messages.append({
                         'role': 'tool',
                         'content': tool_results[i],
