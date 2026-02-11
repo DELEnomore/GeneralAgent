@@ -1,0 +1,3 @@
+PyYAML==6.0.3
+openai==2.16.0
+docstring_parser==0.17.0
