@@ -11,7 +11,10 @@ async def main():
     model = 'deepseek-ai/DeepSeek-R1'
     agent = Agent()
     # user_input = input()
-    user_input = "计算(1 + 1) * (1 + 2)的值，先创建子Agent计算加法部分，最终由自己进行乘法计算"
+    # user_input = "计算(1 + 1) * (1 + 2)的值，先创建子Agent计算加法部分，最终由自己进行乘法计算"
+    # user_input = '创建一个空文件，命名为test.md'
+    # user_input = '将本地的abc.md文件名称修改为test.md'
+    user_input = '阅读本地的全部代码结构，将分析报告输出到文件中'
     result = await agent.execute(user_input)
     print(result)
 

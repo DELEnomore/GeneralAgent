@@ -31,6 +31,9 @@ class Agent:
         ]
         while True:
             message = await self.client.create(messages, self.tools)
+            content = message['content'].replace('\n', '')
+            truncated_content =  content[:50] + '...' if len(content) > 50 else content
+            print(f'{message['role']}: {truncated_content}')
             messages.append(message)
             if not message.get('tool_calls'):
                 return message['content']
@@ -40,14 +43,15 @@ class Agent:
                     execute_tool_call(tool_call['function']['name'], tool_call['function']['arguments'])
                     for tool_call in message['tool_calls']
                 ])
-
-                messages.extend([{
-                    'role': 'tool',
-                    'content': tool_results[i],
-                    'name': message['tool_calls'][i]['function']['name'],
-                    'id': message['tool_calls'][i]['id'],
-                } for i in range(len(message['tool_calls']))])
-
+                for i in range(len(message['tool_calls'])):
+                    print(f'--执行工具:{message['tool_calls'][i]['function']['name']}, 参数：{message['tool_calls'][i]['function']['arguments']}')
+                    print(f'--工具执行结果：{_truncate_message(tool_results[i])}')
+                    messages.append({
+                        'role': 'tool',
+                        'content': tool_results[i],
+                        'name': message['tool_calls'][i]['function']['name'],
+                        'id': message['tool_calls'][i]['id'],
+                    })
 
 @tool()
 async def task(prompt: str, tools: list, user_input: str) -> str:
@@ -66,3 +70,16 @@ async def task(prompt: str, tools: list, user_input: str) -> str:
     print(f'子Agent{id}执行结束，结果:{result}')
     del agent
     return result
+
+def _truncate_message(message):
+    """
+    消息截断，去除换行，方便控制台打印
+    :param message:
+    :return:
+    """
+    if isinstance(message, dict):
+        message = str(message)
+    if len(message) > 100:
+        message = message[0:100]
+    message = ''.join(message.splitlines())
+    return message
