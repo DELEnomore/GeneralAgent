@@ -1,5 +1,10 @@
 import os
 import asyncio
+import webbrowser
+
+import langchain
+from ddgs import DDGS
+
 from tool.tool import tool
 
 def init_tools():
@@ -37,7 +42,6 @@ async def cmd(command: str):
         return "命令执行超时"
     except Exception as e:
         return f"命令执行出错: {str(e)}"
-
 
 @tool()
 async def create_file(file_path: str, content: str):
@@ -111,5 +115,48 @@ async def modify_file(file_path: str, old_content: str, new_content: str):
         return f"文件不存在: {file_path}"
     except Exception as e:
         return f"修改文件失败: {str(e)}"
+
+@tool()
+async def web_search(query: str, max_results: int = 10):
+    """
+    基于DuckDuckGo的联网搜索工具
+    :param query: 搜索查询词
+    :param max_results: 最大返回结果数量
+    :return: 搜索结果的格式化字符串
+    """
+    try:
+        
+        # 在线程池中执行搜索，避免阻塞事件循环
+        loop = asyncio.get_event_loop()
+        
+        def _search():
+            results = []
+            with DDGS() as ddgs:
+                # 设置超时和重试
+                for result in ddgs.text(query, max_results=max_results, region="wt-wt", safesearch="moderate"):
+                    results.append({
+                        'title': result.get('title', '无标题'),
+                        'description': result.get('body', '无描述'),
+                        'url': result.get('href', '无URL')
+                    })
+            return results
+
+        search_results = await loop.run_in_executor(None, _search)
+        
+        if not search_results:
+            return f"未找到与 '{query}' 相关的搜索结果"
+        
+        # 格式化结果
+        formatted_results = f"DuckDuckGo 搜索 '{query}' 的结果 ({len(search_results)} 个结果):\n\n"
+        for i, result in enumerate(search_results, 1):
+            formatted_results += f"结果 {i}:\n"
+            formatted_results += f"标题: {result['title']}\n"
+            formatted_results += f"描述: {result['description'][:200]}...\n" if len(result['description']) > 200 else f"描述: {result['description']}\n"
+            formatted_results += f"URL: {result['url']}\n"
+            formatted_results += "-" * 50 + "\n"
+        
+        return formatted_results
+    except Exception as e:
+        return f"搜索失败: {str(e)}"
 
 
